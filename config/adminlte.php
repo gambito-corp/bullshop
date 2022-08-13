@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>Admin</b>LTE',
+    'logo' => '<b>Bull</b>SHOP',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -289,17 +289,15 @@ return [
         ],
         [
             'text'        => 'Panel de Control',
-            'url'         => 'admin/pages',
-            'icon'        => 'far fa-fw fa-file',
-            'label'       => 4,
-            'label_color' => 'success',
+            'route'       => 'home',
+            'icon'        => 'fas fa-fw fa-tachometer-alt',
+        ],
+        [
+            'text'   => 'Roles',
+            'route'  => 'roles.index',
+            'icon'   => 'fas fa-fw fa-user-cog',
         ],
         ['header' => 'account_settings'],
-        [
-            'text' => 'Roles',
-            'url'  => 'admin/settings',
-            'icon' => 'fas fa-fw fa-user',
-        ],
         [
             'text'    => 'Ventas',
             'icon'    => 'fas fa-fw fa-share',
