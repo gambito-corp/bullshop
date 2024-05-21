@@ -1,11 +1,29 @@
-@extends('adminlte::page')
-
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>Panel de Administracion de {{env('APP_NAME')}}</h1>
-@stop
+@extends('layouts.theme.app')
 
 @section('content')
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <h5>
+                        <div class="card-header">{{ __('Home') }}</div>
+                    </h5>
 
-@stop
+                    <div class="card-body text-center">
+                        @if (session('status'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('status') }}
+                            </div>
+                        @endif
+                        <h5>
+
+
+                            {{ __('¡Ha iniciado la sesión!') }}
+                            <div class="text-center">{{ Auth::user()->name }}</div>
+                        </h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
