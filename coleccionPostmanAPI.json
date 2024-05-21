@@ -1,0 +1,195 @@
+{
+	"info": {
+		"_postman_id": "9e7f8188-04cf-4ed2-a952-e6c985050eb6",
+		"name": "Apis.net.pe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Consulta de RUC",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/v1/ruc?numero=10460278975",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"ruc"
+					],
+					"query": [
+						{
+							"key": "numero",
+							"value": "10460278975"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Consulta de DNI",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/v1/dni?numero=46027897",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"dni"
+					],
+					"query": [
+						{
+							"key": "numero",
+							"value": "46027897"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tipo de cambio - fecha especifica",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/v1/tipo-cambio-sunat?fecha=2020-05-05",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"tipo-cambio-sunat"
+					],
+					"query": [
+						{
+							"key": "fecha",
+							"value": "2020-05-05"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tipo de cambio - hoy",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/v1/tipo-cambio-sunat",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"tipo-cambio-sunat"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Tipo de cambio - por mes y año",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{API_URL}}/v1/tipo-cambio-sunat?month=5&year=2021",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"tipo-cambio-sunat"
+					],
+					"query": [
+						{
+							"key": "month",
+							"value": "5"
+						},
+						{
+							"key": "year",
+							"value": "2021"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Factura a JSON",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "xml",
+							"type": "file",
+							"src": "/home/erajuan/xmls/20123456789-01-F001-126.xml"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{API_URL}}/v1/invoice-a-json",
+					"host": [
+						"{{API_URL}}"
+					],
+					"path": [
+						"v1",
+						"invoice-a-json"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "API_URL",
+			"value": "https://api.apis.net.pe"
+		},
+		{
+			"key": "TOKEN",
+			"value": "apis-token-1.aTSI1U7KEuT-6bbbCguH-4Y8TI6KS73N"
+		}
+	]
+}

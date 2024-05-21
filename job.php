@@ -1,0 +1,1 @@
+return 'php artisan queue:work'
