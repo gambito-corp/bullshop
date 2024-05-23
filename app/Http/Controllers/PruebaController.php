@@ -322,7 +322,6 @@ class PruebaController extends Controller
 
     public function actualizarWP()
     {
-        dump('inicio');
         $coleccion = collect();
 
         for ($i = 1; $i < 33; $i++) {

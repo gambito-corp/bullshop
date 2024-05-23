@@ -4,7 +4,6 @@
 @php
 $time = \Carbon\Carbon::parse( $ticket->created_at )->toDayDateTimeString();
 @endphp
-@dump($recibo, $ticket, $time, is_string($time))
         <div class="py-2">
             <div class="select">
                 <select name="listaDeImpresoras" id="listaDeImpresoras">
@@ -37,8 +36,8 @@ $time = \Carbon\Carbon::parse( $ticket->created_at )->toDayDateTimeString();
         const nombre = "Vendedor: " + <?php echo json_encode(Auth::user()->name); ?>;
         const time = "Fecha de Venta: " + <?php echo json_encode($time); ?>;
         const moneda = <?php echo json_encode(env('MONEDA', 'S/. ')); ?>;
-        
-    
+
+
 
 
 $btnImprimir.addEventListener("click", () => {
