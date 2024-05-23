@@ -6,7 +6,6 @@ use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Bus\Queueable;
 use Exception;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -14,12 +13,12 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Helpers;
 
-class WooComerceProducts implements ShouldQueue
+class WooCommerceProducts implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     public $valor;
-    
+
     /**
      * Create a new job instance.
      *
@@ -28,8 +27,9 @@ class WooComerceProducts implements ShouldQueue
     public function __construct($valor)
     {
         $this->valor = $valor;
+        dd($valor);
     }
-    
+
     /**
      * Execute the job.
      *
@@ -37,123 +37,79 @@ class WooComerceProducts implements ShouldQueue
      */
     public function handle()
     {
-        $categoria = Category::where('name', $this->valor->categories[0]->name)->first();
-        if(!empty($this->valor->attributes)){
-            $atributos = collect($this->valor->attributes);
-            $marca = $atributos->where('name', "Marca")->first();
-            $option = $marca->options;
-            $marca = $option[0];
-        }else{
-            $marca = '';
+
+    }
+
+    /**
+     * Extract the brand from the attributes.
+     *
+     * @param array $attributes
+     * @return string
+     */
+    private function extractBrand($attributes)
+    {
+        dd($attributes);
+        if (empty($attributes)) {
+            return '';
         }
-        
-        try {
-            if($this->valor->type == 'variable'){
-                foreach ($this->valor->variations as $id){
-                    $item = Helpers::getProduct($id);
-                    $item = collect($item);
-                    $meta_data = collect($item['meta_data']);
-                    if($meta_data->where('key', 'purchase_product_variable')->first()){
-                        $costo = $meta_data->where('key', 'purchase_product_variable')->first();
-                        if(isset($costo->value)){
-                            $costo = $costo->value;
-                        }elseif(isset($costo['value'])){
-                            $costo = $costo['value'];
-                        }else{
-                            $costo = 0;
-                        }
-                    }else{
-                        $costo = 0;
-                    }
-                    $producto = Product::where('wp_id', $id)->first();
-                    if(!$producto){
-                        $producto = new Product();
-                        $producto->category_id = $categoria->id;
-                        $producto->name = $item['name'];
-                        $producto->wp_id = $id;
-                        $producto->slug = $item['slug'];
-                        $producto->permalink = $item['permalink'];
-                        $producto->type = $item['type'];
-                        $producto->status = $item['status'];
-                        $producto->description = $item['description'];
-                        $producto->barcode = $item['sku'];
-                        $producto->price = $item['price'];
-                        $producto->costo = $costo;
-                        $producto->stock = $item['stock_quantity']; 
-                        $producto->marca = $marca;
-                        $producto->image = isset($item['images'][0]->src) ? $item['images'][0]->src : 'curso.png';
-                        $test = $producto->save(); 
-                    }else{
-                        $producto->category_id = $categoria->id;
-                        $producto->name = $item['name'];
-                        $producto->wp_id = $id;
-                        $producto->slug = $item['slug'];
-                        $producto->permalink = $item['permalink'];
-                        $producto->type = $item['type'];
-                        $producto->status = $item['status'];
-                        $producto->description = $item['description'];
-                        $producto->barcode = $item['sku'];
-                        $producto->price = $item['price'];
-                        $producto->costo = $costo;
-                        $producto->stock = $item['stock_quantity']; 
-                        $producto->marca = $marca;
-                        $producto->image = isset($item['images'][0]->src) ? $item['images'][0]->src : 'curso.png';
-                        $test = $producto->update(); 
-                    }
-                }
-            }else{
-                $meta_data = collect($this->valor->meta_data);
-                if($meta_data->where('key', 'purchase_product_simple')){
-                    $costo = $meta_data->where('key', 'purchase_product_simple')->first();
-                        if(isset($costo->value)){
-                            $costo = $costo->value;
-                        }elseif(isset($costo['value'])){
-                            $costo = $costo->value;
-                        }else{
-                            $costo = 0;
-                        }
-                    }else{
-                        $costo = 0;
-                    }
-                    $producto = Product::where('wp_id', $this->valor->id)->first();
-                if(!$producto){
-                    $producto = new Product();
-                    $producto->category_id = $categoria->id;
-                    $producto->name = $this->valor->name;
-                    $producto->wp_id = $this->valor->id;
-                    $producto->slug = $this->valor->slug;
-                    $producto->permalink = $this->valor->permalink;
-                    $producto->type = $this->valor->type;
-                    $producto->status = $this->valor->status;
-                    $producto->description = $this->valor->description;
-                    $producto->barcode = $this->valor->sku;
-                    $producto->price = $this->valor->price;
-                    $producto->costo = $costo;
-                    $producto->stock = $this->valor->stock_quantity; 
-                    $producto->marca = $marca;
-                    $producto->image = isset($this->valor->images[0]->src) ? $this->valor->images[0]->src : 'curso.png';
-                    $test = $producto->save();
-                }else{
-                    $producto->category_id = $categoria->id;
-                    $producto->name = $this->valor->name;
-                    $producto->wp_id = $this->valor->id;
-                    $producto->slug = $this->valor->slug;
-                    $producto->permalink = $this->valor->permalink;
-                    $producto->type = $this->valor->type;
-                    $producto->status = $this->valor->status;
-                    $producto->description = $this->valor->description;
-                    $producto->barcode = $this->valor->sku;
-                    $producto->price = $this->valor->price;
-                    $producto->costo = $costo;
-                    $producto->stock = $this->valor->stock_quantity; 
-                    $producto->marca = $marca;
-                    $producto->image = isset($this->valor->images[0]->src) ? $this->valor->images[0]->src : 'curso.png';
-                    $test = $producto->update();
-                }
-            }
-        } catch (Exception $e) {
-            Log::info($e);
+
+        $atributos = collect($attributes);
+        $marca = $atributos->where('name', 'Marca')->first();
+
+        return $marca->options[0] ?? '';
+    }
+
+    /**
+     * Process and save the product.
+     *
+     * @param int $id
+     * @param Category $categoria
+     * @param string $marca
+     * @param object|null $productData
+     * @return void
+     */
+    private function processProduct($id, $categoria, $marca, $productData = null)
+    {
+        $productData = $productData ?? Helpers::getProduct($id);
+        $productData = collect($productData);
+        $meta_data = collect($productData['meta_data']);
+        $costo = $this->extractCosto($meta_data, $productData['type'] == 'variable');
+
+        $producto = Product::firstOrNew(['wp_id' => $id]);
+        $producto->fill([
+            'category_id' => $categoria->id,
+            'name' => $productData['name'],
+            'slug' => $productData['slug'],
+            'permalink' => $productData['permalink'],
+            'type' => $productData['type'],
+            'status' => $productData['status'],
+            'description' => $productData['description'],
+            'barcode' => $productData['sku'],
+            'price' => $productData['price'],
+            'costo' => $costo,
+            'stock' => $productData['stock_quantity'],
+            'marca' => $marca,
+            'image' => $productData['images'][0]['src'] ?? 'curso.png',
+        ]);
+        $producto->save();
+    }
+
+    /**
+     * Extract the cost from meta data.
+     *
+     * @param \Illuminate\Support\Collection $meta_data
+     * @param bool $isVariable
+     * @return float
+     */
+    private function extractCosto($meta_data, $isVariable)
+    {
+        $key = $isVariable ? 'purchase_product_variable' : 'purchase_product_simple';
+        $costo = $meta_data->where('key', $key)->first();
+
+        if ($costo) {
+            return $costo->value ?? $costo['value'] ?? 0;
         }
-        
+
+        return 0;
     }
 }

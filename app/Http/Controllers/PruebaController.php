@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\ProductsJobs;
 use App\Models\Category;
 use App\Models\Product;
+use App\Services\ProductsService;
+use App\Services\WoocomerceService;
 use Automattic\WooCommerce\Client;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Helpers;
@@ -14,7 +17,7 @@ use Picqer\Barcode\BarcodeGeneratorPNG;
 use Picqer\Barcode\BarcodeGeneratorJPG;
 use Picqer\Barcode\BarcodeGeneratorSVG;
 use Intervention\Image\Facades\Image;
-use App\Jobs\WooComerceProducts;
+use App\Jobs\WooCommerceProducts;
 use Illuminate\Support\Facades\Artisan;
 
 class PruebaController extends Controller
@@ -23,6 +26,12 @@ class PruebaController extends Controller
 
 
     public $ticket;
+    public ProductsService $productsService;
+
+    public function __construct(ProductsService $productsService)
+    {
+        $this->productsService = $productsService;
+    }
 
 
 
@@ -311,24 +320,24 @@ class PruebaController extends Controller
         return redirect ()->route('productos');
     }
 
-    public function ActualizarWP()
+    public function actualizarWP()
     {
+        dump('inicio');
         $coleccion = collect();
-        for ($i=1; $i < 33; $i++) {
-            $agregarPagina = Helpers::getProducts(100, $i);
-            if($agregarPagina == []){
-                break;
-            }else{
-                foreach ($agregarPagina as $key => $value) {
-                    $coleccion->push($value);
-                }
-            }
-        }
-        $coleccion->each(function($item, $key) {
-                WooComerceProducts::dispatch($item);
-        });
-        return redirect ()->route('productos');
 
+        for ($i = 1; $i < 33; $i++) {
+            $agregarPagina = $this->productsService->getProducts($i, 100);
+            if (empty($agregarPagina)) {
+                break;
+            }
+            $coleccion = $coleccion->merge($agregarPagina);
+        }
+
+        $coleccion->each(function ($item, $key) {
+            ProductsJobs::dispatch($item, $key);
+        });
+
+        return redirect()->route('productos');
     }
 
 
